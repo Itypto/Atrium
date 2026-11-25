@@ -2,8 +2,10 @@
 # Atrium Android
 
 Atrium is a native C++ redirect designed for legacy Fortnite Android builds, inspired by [Sinum](https://github.com/projectnovafn/Sinum/tree/main/Android).
+And is used for [Nextieria](https://nextieria.dev/discord).
+*Note It does not contain the ch2 s1 webview redirect used for Nextieria*
 
-Atrium features a modular implementation, configurable backend settings and support for Arena and competitive HUDs on Android builds that do not display them natively.
+Atrium features configurable backend settings and support for Arena and competitive HUDs on Android builds that do not display them natively.
 
 ## Features
 
@@ -13,8 +15,6 @@ Atrium features a modular implementation, configurable backend settings and supp
 - Configurable TLS certificate verification.
 - Arena HUD support.
 - Competitive and tournament HUD support.
-- Build-specific compatibility handling.
-- CMake-based compilation.
 
 ## Supported versions
 
@@ -25,46 +25,92 @@ Atrium features a modular implementation, configurable backend settings and supp
 | Chapter 3 | Untested |
 | Other versions | Unconfirmed |
 
-## Differences from Sinum
-
-While Atrium takes inspiration from Sinum, it uses a different implementation and project structure.
-
-| Feature | Sinum | Atrium |
-|---|---|---|
-| Build system | Android.mk | CMake |
-| Configuration | Hardcoded | options.h |
-| URL handling | URI structure | Custom URL handling |
-| Backend port | Hardcoded | Configurable |
-| TLS verification | Disabled | Configurable |
-| Arena HUD | Not included | Supported |
-| Competitive HUD | Not included | Supported |
-| Architecture | Multiple architectures | ARM64 |
-
 ## Configuration
 
 Atrium can be configured through `src/options/options.h`.
 
-This file allows you to configure the backend hostname, port, networking options, Arena HUD and competitive HUD before compiling the library.
+This file allows you to configure the backend hostname, port, networking options, Arena HUD and competitive HUD before compiling the lib.
 
-Arena and competitive HUD support is intended for builds where these widgets do not appear natively.
+Arena and competitive HUD support is intended for builds where these widgets do not appear natively. If they do appear natively like in 9.10 disable competive and arena hud by setting them to **false**.
 
 ## Installation
 
 Atrium compiles into `libAtrium.so`, an ARM64 Android shared library.
 
-Integration requires an Android client that you have permission to modify and that loads Atrium during application initialization.
+## Building Atrium
 
-Only use Atrium with authorized private backend environments. Keep TLS certificate verification enabled when connecting to public services.
+### Requirements
 
-## Building
-
-Requirements:
-
-- Android NDK
-- CMake
+- Android NDK (28.2.13676358 recommended)
+- CMake 3.22 or newer
 - Ninja
-- C++17-compatible compiler
+- C++17
 
+### Building on Windows
+
+Open PowerShell in the Atrium project directory.
+
+Configure your backend and HUD settings in `src/options/options.h` before building.
+
+Set your Android NDK path:
+
+```powershell
+$env:ANDROID_NDK_HOME = "$env:LOCALAPPDATA\Android\Sdk\ndk\28.2.13676358"
+```
+
+Configure CMake:
+
+```powershell
+cmake -S . -B build -G Ninja `
+  "-DCMAKE_TOOLCHAIN_FILE=$env:ANDROID_NDK_HOME\build\cmake\android.toolchain.cmake" `
+  -DANDROID_ABI=arm64-v8a `
+  -DANDROID_PLATFORM=android-28
+```
+
+Build Atrium:
+
+```powershell
+cmake --build build --target Atrium
+```
+
+Once successfully compiled, the library will be located at:
+
+```
+build/libAtrium.so
+```
+
+## Installation
+Once you have the **libAtrium.so**
+Decompile fortnite (Decompile smali aswell)
+
+- **Step 1** Go to lib/arm64-v8a 
+
+- **Step 2** Add the **libAtrium.so**
+
+- **Step 3** Go to: smali/com/epicgames/ue4/GameActivity.smali
+
+- **Step 4** Search for: .method public onCreate(Landroid/os/Bundle;)V 
+
+- **Step 5** Paste: const-string v0, "Atrium"
+invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+
+- **Step 6** Save and build the APK
+
+## Compatibility
+
+- Fortnite 6.21–10.30
+- Fortnite 16.00–18.40
+- Chapter 3 and later is currently untested.
+
+## Troubleshooting
+
+If Atrium fails or smth goes wrong. Diagnostic information/logs can be viewed using ADB:
+
+```powershell
+adb logcat -s Atrium
+```
+
+Ensure that your backend configuration is correct and that your backend is reachable.
 ## Credits
 
 Created and maintained by Itypto.

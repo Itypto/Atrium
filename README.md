@@ -95,7 +95,7 @@ Once you have compiled **`libAtrium.so`**, decompile Fortnite (including Smali f
 .method public onCreate(Landroid/os/Bundle;)V
 ```
 
-- **Step 5:** Paste:
+- **Step 5:** Go down 1-2 lines and paste:
 
 ```smali
 const-string v0, "Atrium"

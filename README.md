@@ -80,27 +80,29 @@ build/libAtrium.so
 ```
 
 ## Installation
-Once you have the **libAtrium.so**
-Decompile fortnite (Decompile smali aswell)
 
-- **Step 1** Go to lib/arm64-v8a 
+Once you have compiled **`libAtrium.so`**, decompile Fortnite (including Smali files).
 
-- **Step 2** Add the **libAtrium.so**
+- **Step 1:** Go to `lib/arm64-v8a/`
 
-- **Step 3** Go to: smali/com/epicgames/ue4/GameActivity.smali
+- **Step 2:** Add `libAtrium.so`
 
-- **Step 4** Search for: .method public onCreate(Landroid/os/Bundle;)V 
+- **Step 3:** Go to `smali/com/epicgames/ue4/GameActivity.smali`
 
-- **Step 5** Paste: const-string v0, "Atrium"
+- **Step 4:** Search for:
+
+```smali
+.method public onCreate(Landroid/os/Bundle;)V
+```
+
+- **Step 5:** Paste:
+
+```smali
+const-string v0, "Atrium"
 invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+```
 
-- **Step 6** Save and build the APK
-
-## Compatibility
-
-- Fortnite 6.21–10.30
-- Fortnite 16.00–18.40
-- Chapter 3 and later is currently untested.
+- **Step 6:** Save your changes and rebuild the APK.
 
 ## Troubleshooting
 

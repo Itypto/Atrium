@@ -28,27 +28,8 @@ Atrium features configurable backend settings and support for Arena and competit
 ## Configuration
 
 Atrium can be configured through `src/options/options.h`.
-
-This file allows you to configure the backend hostname, port, networking options, Arena HUD and competitive HUD before compiling the lib.
-
-With HTTPS and TLS verification enabled, Atrium normally retains the game's CA
-bundle. If the game needs an updated PEM bundle, set the process environment
-variable `ATRIUM_CA_BUNDLE` to its absolute, app-readable path **before** loading
-Atrium. The bundle is used only for redirected requests; certificate and
-hostname verification remain enabled. The application is responsible for
-packaging and updating the bundle.
-
-Some games install a custom curl TLS context callback that rejects redirected
-servers even with a valid certificate. To use curl's normal TLS context for
-redirected HTTPS requests, set `ATRIUM_USE_CURL_TLS_CONTEXT=1` before loading
-Atrium. This skips the game's callback and any extra checks it performs,
-including certificate pinning, for redirected requests. CA and hostname
-verification remain enabled. A direct request to a non-redirected host retains
-the game's callback; HTTP redirects followed by curl from a redirected request
-also use curl's TLS context. Leave the variable unset unless this behavior is
-needed and understood.
-
-Arena and competitive HUD support is intended for builds where these widgets do not appear natively. If they do appear natively like in 9.10 disable competive and arena hud by setting them to **false**.
+There you can configure backend adress port arena hud competive hud
+*Note If your game version already includes the Arena and competitive HUD (such as 9.10), disable both options by setting them to false.*
 
 ## Installation
 
